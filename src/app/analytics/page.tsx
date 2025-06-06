@@ -7,12 +7,40 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import {
   TrendingUp, TrendingDown, Users, AlertTriangle, Download, RefreshCw, Target, Clock, Activity, CheckCircle,
-  Award, Trophy, Star, Zap, Lightbulb, Heart, Rocket, Crown, Medal,
-  Info, HelpCircle, ChevronRight, ThumbsUp, Flag, BarChart3
+  Award, Trophy, Star, Zap, Lightbulb, Heart, Rocket, Crown, Medal, DollarSign, Brain, Gauge,
+  Info, HelpCircle, ChevronRight, ThumbsUp, Flag, BarChart3, AlertCircle, TrendingDown as TrendDown,
+  Building2, UserCheck, Briefcase, MessageSquare, FileText, Eye, ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
+
+interface ProfessionalInsight {
+  category: 'CRITICAL' | 'OPPORTUNITY' | 'SUCCESS' | 'RECOMMENDATION';
+  title: string;
+  description: string;
+  impact: 'HIGH' | 'MEDIUM' | 'LOW';
+  actionRequired: boolean;
+  metrics?: { [key: string]: number | string };
+}
+
+interface BusinessMetrics {
+  systemEfficiency: {
+    workflowEffectiveness: number;
+    processOptimization: number;
+    taskCompletion: number;
+  };
+  operationalEfficiency: {
+    adminTimeRatio: number;
+    systemComplexity: number;
+    workflowEfficiency: number;
+  };
+  teamPerformance: {
+    managerEffectiveness: number;
+    salesProductivity: number;
+    collaborationQuality: number;
+  };
+}
 
 interface AnalyticsData {
   summary: {
@@ -31,14 +59,29 @@ interface AnalyticsData {
   systemHealth: {
     overall_health_score: number;
     efficiency_index: number;
-    data_reliability: number;
-    user_productivity: number;
-    lead_management_score: number;
+    data_reliability?: number;
+    user_productivity?: number;
+    lead_management_score?: number;
     critical_failure_rate: number;
     excellence_indicators: number;
     health_status: string;
     trend_direction: string;
   };
+  businessMetrics: BusinessMetrics;
+  criticalIssues: Array<{
+    section: string;
+    question_text: string;
+    severity_score: number;
+    frequency: number;
+    issue_category: string;
+  }>;
+  excellenceAreas: Array<{
+    section: string;
+    avg_score: number;
+    response_count: number;
+    problem_indicators: number;
+    confidence_level: number;
+  }>;
   achievements: {
     participation_badges: {
       bronze: boolean;
@@ -169,7 +212,7 @@ export default function AnalyticsPage() {
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `eduscore-analytics-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `analytics-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -221,314 +264,662 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard Analytics</h1>
-            <p className="text-gray-600 mt-1">
-              {data.summary.total_responses} respuestas • {data.summary.healthStatus} • 
-              {data.summary.participation_rate === 'HIGH' ? 'Alta' : data.summary.participation_rate === 'MODERATE' ? 'Media' : 'Baja'} participación
-            </p>
-          </div>
-          <div className="flex space-x-3">
-            <Button variant="outline" size="sm" onClick={loadAnalytics} disabled={loading}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Actualizar
-            </Button>
-            <Button size="sm" onClick={handleExportData} className="bg-gray-900 hover:bg-gray-800">
-              <Download className="w-4 h-4 mr-2" />
-              Exportar
-            </Button>
-          </div>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="border-gray-200">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Salud del Sistema</p>
-                  <p className={`text-2xl font-bold ${getScoreColor(data.systemHealth.overall_health_score)}`}>
-                    {data.systemHealth.overall_health_score}/10
-                  </p>
-                  <p className="text-xs text-gray-500">{data.systemHealth.health_status}</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto">
+          {/* HEADER */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard de Analytics</h1>
+                <p className="text-gray-600 mb-4">
+                  Sistema de monitoreo para coordinadores y asesores
+                </p>
+                <div className="flex items-center space-x-6 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${data.summary.total_responses > 0 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                    <span className="font-medium">{data.summary.total_responses} respuestas recopiladas</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-gray-500" />
+                    <span>Gerentes: {data.summary.manager_participation} | Ventas: {data.summary.sales_participation}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-gray-500" />
+                    <span>Actualizado: {new Date(data.summary.lastUpdated).toLocaleString('es-ES', {
+                      day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    })}</span>
+                  </div>
                 </div>
-                <Target className="h-8 w-8 text-gray-400" />
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-gray-200">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Eficiencia</p>
-                  <p className={`text-2xl font-bold ${getScoreColor(data.systemHealth.efficiency_index)}`}>
-                    {data.systemHealth.efficiency_index}/10
-                  </p>
-                  <p className="text-xs text-gray-500">Productividad</p>
-                </div>
-                <Activity className="h-8 w-8 text-gray-400" />
+              <div className="flex space-x-3">
+                <Button variant="outline" size="sm" onClick={loadAnalytics} disabled={loading}>
+                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  Actualizar
+                </Button>
+                <Button size="sm" onClick={handleExportData} className="bg-blue-600 hover:bg-blue-700">
+                  <Download className="w-4 h-4 mr-2" />
+                  Exportar Reporte
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-gray-200">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Problemas Críticos</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {data.systemHealth.critical_failure_rate}
-                  </p>
-                  <p className="text-xs text-gray-500">Requieren atención</p>
-                </div>
-                <AlertTriangle className="h-8 w-8 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-gray-200">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Participación</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {data.summary.total_responses}
-                  </p>
-                  <p className="text-xs text-gray-500">{data.progressMetrics.team_engagement_level}</p>
-                </div>
-                <Users className="h-8 w-8 text-gray-400" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Status Alert */}
-        {data.progressMetrics.overall_improvement && (
-          <Alert className="mb-6 border-gray-200 bg-gray-50">
-            <TrendingUp className="h-4 w-4 text-gray-600" />
-            <AlertDescription className="text-gray-700">
-              Sistema mejoró {data.progressMetrics.improvement_percentage}% vs período anterior.
-              {data.progressMetrics.issues_resolved > 0 && ` ${data.progressMetrics.issues_resolved} problemas resueltos.`}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-gray-100">
-            <TabsTrigger value="overview" className="text-gray-700">Vista General</TabsTrigger>
-            <TabsTrigger value="issues" className="text-gray-700">Problemas</TabsTrigger>
-            <TabsTrigger value="metrics" className="text-gray-700">Métricas</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Performance by Section */}
-              <Card className="border-gray-200">
-                <CardHeader>
-                  <CardTitle className="text-lg text-gray-900">Rendimiento por Sección</CardTitle>
-                  <CardDescription className="text-gray-600">Puntuaciones promedio</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={data.sectionPerformance}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis
-                        dataKey="section"
-                        angle={-45}
-                        textAnchor="end"
-                        height={80}
-                        fontSize={11}
-                        stroke="#6b7280"
-                      />
-                      <YAxis domain={[0, 10]} stroke="#6b7280" />
-                      <Tooltip />
-                      <Bar dataKey="avg_score" fill="#6b7280" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              {/* Performance Trends */}
-              <Card className="border-gray-200">
-                <CardHeader>
-                  <CardTitle className="text-lg text-gray-900">Tendencia de Rendimiento</CardTitle>
-                  <CardDescription className="text-gray-600">Últimos 6 meses</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={data.performanceTrends}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                      <XAxis dataKey="month" fontSize={11} stroke="#6b7280" />
-                      <YAxis domain={[0, 10]} stroke="#6b7280" />
-                      <Tooltip />
-                      <Line
-                        type="monotone"
-                        dataKey="avg_performance"
-                        stroke="#374151"
-                        strokeWidth={2}
-                        dot={{ fill: '#374151', strokeWidth: 2, r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
             </div>
+          </div>
 
-            {/* Team Analysis */}
-            <Card className="border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-lg text-gray-900">Análisis por Equipo</CardTitle>
-                <CardDescription className="text-gray-600">Rendimiento y participación</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {data.efficiencyMetrics.map((team, index) => (
-                    <div key={index} className="border border-gray-200 p-4 rounded-lg bg-gray-50">
-                      <h4 className="font-semibold text-gray-900 mb-3 capitalize">
-                        Equipo {team.team}
-                      </h4>
-                      
-                      <div className="space-y-3">
+          {/* EXECUTIVE SUMMARY CARDS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            {/* System Effectiveness */}
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">Proceso de Admisión</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {data.businessMetrics?.systemEfficiency?.workflowEffectiveness !== undefined ?
+                        `${(data.businessMetrics.systemEfficiency.workflowEffectiveness * 10).toFixed(0)}%`
+                        : `${(data.systemHealth.overall_health_score * 10).toFixed(0)}%`}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {data.businessMetrics?.systemEfficiency?.workflowEffectiveness > 0 ?
+                        'Sistema apoya objetivos bien' : 'Pendiente datos de efectividad'}
+                    </p>
+                    <p className="text-xs text-green-600 font-medium mt-1">
+                      ✓ Fortaleza clave del sistema
+                    </p>
+                  </div>
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <Activity className="h-6 w-6 text-green-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* System Health */}
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">Salud del Sistema</p>
+                    <p className={`text-2xl font-bold ${getScoreColor(data.systemHealth.overall_health_score)}`}>
+                      {data.systemHealth.overall_health_score.toFixed(1)}/10
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{data.systemHealth.health_status}</p>
+                  </div>
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <Gauge className="h-6 w-6 text-blue-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Critical Issues */}
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">Problemas Críticos</p>
+                    <p className="text-2xl font-bold text-red-600">
+                      {data.criticalIssues?.length || 0}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">Requieren atención inmediata</p>
+                  </div>
+                  <div className="p-3 bg-red-50 rounded-lg">
+                    <AlertCircle className="h-6 w-6 text-red-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Team Performance */}
+            <Card className="border-gray-200 bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600 mb-1">Coordinación de Equipos</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {data.businessMetrics?.teamPerformance &&
+                       (data.businessMetrics.teamPerformance.salesProductivity > 0 ||
+                        data.businessMetrics.teamPerformance.collaborationQuality > 0) ?
+                        Math.round(((data.businessMetrics.teamPerformance.salesProductivity || 0) +
+                                   (data.businessMetrics.teamPerformance.collaborationQuality || 0)) / 2 * 10) / 10
+                        : data.systemHealth.efficiency_index.toFixed(1)}/10
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {data.businessMetrics?.teamPerformance?.salesProductivity > 0 ?
+                        'Acceso a info y colaboración' : 'Pendiente datos de equipos'}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-purple-50 rounded-lg">
+                    <Users className="h-6 w-6 text-purple-600" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* MAIN ANALYTICS TABS */}
+          <Tabs defaultValue="executive" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 bg-white border border-gray-200">
+              <TabsTrigger value="executive" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Resumen Ejecutivo
+              </TabsTrigger>
+              <TabsTrigger value="business" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Métricas de Negocio
+              </TabsTrigger>
+              <TabsTrigger value="teams" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Análisis por Equipos
+              </TabsTrigger>
+              <TabsTrigger value="system" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Configuración
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="executive" className="space-y-6">
+              {/* Business Metrics Overview */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Activity className="w-5 h-5 mr-2 text-blue-600" />
+                      Eficiencia del Proceso de Admisión
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {data.summary.total_responses > 0 ? (
+                      <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Rendimiento:</span>
-                          <span className={`font-bold ${getScoreColor(team.performance_score)}`}>
-                            {team.performance_score.toFixed(1)}/10
+                          <span className="text-sm text-gray-600">Tiempo de Ventas vs Admin:</span>
+                          <div className="flex flex-col items-end">
+                            <span className={`font-bold ${data.businessMetrics?.operationalEfficiency?.adminTimeRatio === 0 ? 'text-red-600' : 'text-blue-600'}`}>
+                              {data.businessMetrics?.operationalEfficiency?.adminTimeRatio !== undefined ?
+                                `${(data.businessMetrics.operationalEfficiency.adminTimeRatio * 10).toFixed(0)}%` : 'Sin Datos'}
+                            </span>
+                            {data.businessMetrics?.operationalEfficiency?.adminTimeRatio === 0 && (
+                              <span className="text-xs text-red-600 font-medium">
+                                Pérdida: ~10 inscripciones/mes
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Simplicidad del Sistema:</span>
+                          <div className="flex flex-col items-end">
+                            <span className="font-bold text-orange-600">
+                              {data.businessMetrics?.operationalEfficiency?.systemComplexity !== undefined ?
+                                `${(data.businessMetrics.operationalEfficiency.systemComplexity * 10).toFixed(0)}%` : 'Sin Datos'}
+                            </span>
+                            <span className="text-xs text-orange-600">
+                              Meta: 80%+ para eficiencia
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Acceso a Información:</span>
+                          <span className="font-bold text-green-600">
+                            {data.businessMetrics?.operationalEfficiency?.workflowEfficiency !== undefined && data.businessMetrics.operationalEfficiency.workflowEfficiency > 0 ?
+                              `${(data.businessMetrics.operationalEfficiency.workflowEfficiency * 10).toFixed(0)}%` : 'N/A'}
                           </span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-gray-900">{team.strengths}</div>
-                            <div className="text-gray-600">Fortalezas</div>
-                          </div>
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-gray-900">{team.pain_points}</div>
-                            <div className="text-gray-600">Problemas</div>
-                          </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="text-4xl font-bold text-green-600 mb-2">
+                          {((data.businessMetrics.systemEfficiency.workflowEffectiveness +
+                             data.businessMetrics.operationalEfficiency.workflowEfficiency) / 2 * 10).toFixed(0)}%
                         </div>
+                        <p className="text-gray-700 text-sm font-medium">Eficiencia General</p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          Basado en {data.summary.total_responses} respuestas del equipo
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
 
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-600">Respuestas:</span>
-                          <span className="font-medium text-gray-900">{team.sample_size}</span>
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Users className="w-5 h-5 mr-2 text-purple-600" />
+                      Efectividad de Coordinación
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {data.summary.total_responses > 0 ? (
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Monitoreo de Rendimiento:</span>
+                          <span className="font-bold text-purple-600">
+                            {data.businessMetrics?.teamPerformance?.managerEffectiveness !== undefined && data.businessMetrics.teamPerformance.managerEffectiveness > 0 ?
+                              `${(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}%` : 'Sin Datos Gerenciales'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Acceso a Info de Prospectos:</span>
+                          <span className="font-bold text-blue-600">
+                            {data.businessMetrics?.teamPerformance?.salesProductivity !== undefined && data.businessMetrics.teamPerformance.salesProductivity > 0 ?
+                              `${(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}%` : 'N/A'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">Intercambio de Información:</span>
+                          <span className="font-bold text-green-600">
+                            {data.businessMetrics?.teamPerformance?.collaborationQuality !== undefined && data.businessMetrics.teamPerformance.collaborationQuality > 0 ?
+                              `${(data.businessMetrics.teamPerformance.collaborationQuality * 10).toFixed(0)}%` : 'N/A'}
+                          </span>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="issues" className="space-y-6">
-            {/* Critical Issues */}
-            <Card className="border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-lg text-gray-900">Problemas Críticos</CardTitle>
-                <CardDescription className="text-gray-600">Requieren atención prioritaria</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {data.processIssues.slice(0, 5).map((issue, index) => (
-                    <div key={index} className="border border-gray-200 p-4 rounded-lg">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className="text-xs border-gray-300">
-                            #{index + 1}
-                          </Badge>
-                          <Badge className={`text-xs ${getCategoryColor(issue.issue_category)}`}>
-                            {issue.issue_category}
-                          </Badge>
+                    ) : (
+                      <div className="text-center py-6">
+                        <div className="text-4xl font-bold text-purple-600 mb-2">
+                          {((data.businessMetrics.teamPerformance.managerEffectiveness +
+                             data.businessMetrics.teamPerformance.salesProductivity +
+                             data.businessMetrics.teamPerformance.collaborationQuality) / 3 * 10).toFixed(0)}%
                         </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold ${getScoreColor(issue.severity_score)}`}>
-                            {issue.severity_score.toFixed(1)}/10
-                          </div>
-                          <p className="text-xs text-gray-500">{issue.frequency} reportes</p>
-                        </div>
+                        <p className="text-gray-700 text-sm font-medium">Efectividad del Equipo</p>
+                        <p className="text-gray-500 text-xs mt-1">
+                          Gerentes: {(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}% •
+                          Ventas: {(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}%
+                        </p>
                       </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Target className="w-5 h-5 mr-2 text-green-600" />
+                      Próximos Pasos
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {data.summary.total_responses === 0 ? (
+                        <>
+                          <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center font-bold">1</div>
+                            <div>
+                              <p className="font-medium text-gray-900 text-sm">Iniciar Recopilación de Datos</p>
+                              <p className="text-gray-600 text-xs">Dirigir a los equipos a completar las encuestas</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-gray-400 text-white text-xs flex items-center justify-center font-bold">2</div>
+                            <div>
+                              <p className="font-medium text-gray-900 text-sm">Monitorear Participación</p>
+                              <p className="text-gray-600 text-xs">Objetivo: 80% de participación del equipo</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-gray-400 text-white text-xs flex items-center justify-center font-bold">3</div>
+                            <div>
+                              <p className="font-medium text-gray-900 text-sm">Analizar Resultados</p>
+                              <p className="text-gray-600 text-xs">Review insights profesionales y tomar acciones</p>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {/* Real-time insights based on calculated metrics */}
+                          {data.businessMetrics.teamPerformance.salesProductivity > 8 && (
+                            <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                              <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center font-bold">✓</div>
+                              <div>
+                                <p className="font-medium text-gray-900 text-sm">Excelente Productividad</p>
+                                <p className="text-gray-600 text-xs">Los asesores están rindiendo al {(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}% - mantener este nivel</p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {data.businessMetrics.teamPerformance.managerEffectiveness < 6 && (
+                            <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
+                              <div className="w-6 h-6 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center font-bold">!</div>
+                              <div>
+                                <p className="font-medium text-gray-900 text-sm">Mejorar Liderazgo</p>
+                                <p className="text-gray-600 text-xs">Efectividad gerencial al {(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}% - revisar procesos de monitoreo</p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {data.businessMetrics.operationalEfficiency.adminTimeRatio === 0 && (
+                            <div className="flex items-start space-x-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                              <div className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</div>
+                              <div>
+                                <p className="font-medium text-red-900 text-sm">¡CRISIS DE PRODUCTIVIDAD!</p>
+                                <p className="text-red-700 text-xs mb-2">
+                                  <strong>Problema:</strong> Asesores dedican 100% tiempo a entrada de datos, 0% a ventas directas
+                                </p>
+                                <p className="text-red-700 text-xs mb-1">
+                                  <strong>Impacto:</strong> 8 horas/día perdidas por asesor = 0 conversiones
+                                </p>
+                                <p className="text-red-700 text-xs">
+                                  <strong>Acción:</strong> 1) Automatizar entrada de datos 2) Redistribuir tareas 3) Meta: 60% ventas, 40% admin
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {data.businessMetrics.operationalEfficiency.systemComplexity > 0 && data.businessMetrics.operationalEfficiency.systemComplexity < 8 && (
+                            <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold">⚠</div>
+                              <div>
+                                <p className="font-medium text-orange-900 text-sm">Complejidad de Herramientas Mixta</p>
+                                <p className="text-orange-700 text-xs mb-1">
+                                  <strong>Situación:</strong> Algunos usan pocas herramientas (1-2), otros muchas (7-8)
+                                </p>
+                                <p className="text-orange-700 text-xs">
+                                  <strong>Acción:</strong> Estandarizar a máximo 3 herramientas principales para todo el equipo
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
                       
-                      <h4 className="font-medium text-gray-900 mb-2">{issue.section}</h4>
-                      <p className="text-sm text-gray-600">{issue.question_text}</p>
+                      {data.summary.total_responses > 0 && (
+                        data.actionableInsights.improvement_opportunities.slice(0, 2).map((item, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold">{index + 1}</div>
+                            <div>
+                              <p className="font-medium text-gray-900 text-sm">Acción Recomendada</p>
+                              <p className="text-gray-600 text-xs">{item}</p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      
+                      {/* Financial Impact and Action Plan */}
+                      {data.businessMetrics.operationalEfficiency.adminTimeRatio === 0 && (
+                        <>
+                          <div className="flex items-start space-x-3 p-4 bg-slate-100 rounded-lg border">
+                            <div className="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-bold">$</div>
+                            <div className="w-full">
+                              <p className="font-bold text-slate-900 text-sm mb-2">💰 Impacto Financiero Mensual</p>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                  <span className="text-slate-600">Tiempo perdido/día:</span>
+                                  <span className="text-slate-900 font-bold ml-1">16 horas</span>
+                                </div>
+                                <div>
+                                  <span className="text-slate-600">Costo oportunidad:</span>
+                                  <span className="text-red-600 font-bold ml-1">$50,000</span>
+                                </div>
+                                <div>
+                                  <span className="text-slate-600">Inscripciones perdidas:</span>
+                                  <span className="text-red-600 font-bold ml-1">~10/mes</span>
+                                </div>
+                                <div>
+                                  <span className="text-slate-600">ROI optimización:</span>
+                                  <span className="text-green-600 font-bold ml-1">300%</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">📋</div>
+                            <div className="w-full">
+                              <p className="font-bold text-blue-900 text-sm mb-2">Plan de Acción 30 Días</p>
+                              <div className="space-y-1 text-xs">
+                                <div className="flex justify-between">
+                                  <span className="text-blue-700">Semana 1: Automatizar entrada de datos</span>
+                                  <span className="text-blue-600 font-bold">Prioridad 1</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-blue-700">Semana 2: Capacitar en herramientas nuevas</span>
+                                  <span className="text-blue-600 font-bold">Prioridad 2</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-blue-700">Semana 3: Redistribuir tareas 60/40</span>
+                                  <span className="text-blue-600 font-bold">Prioridad 1</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-blue-700">Semana 4: Medir resultados</span>
+                                  <span className="text-green-600 font-bold">Meta: +5 inscripciones</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
-            {/* Actionable Insights */}
-            {data.actionableInsights.immediate_actions.length > 0 && (
-              <Card className="border-gray-200">
+            <TabsContent value="business" className="space-y-6">
+              {/* Performance by Section */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Rendimiento por Área Funcional</CardTitle>
+                    <CardDescription className="text-gray-600">Puntuaciones promedio por sección evaluada</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={data.sectionPerformance} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis
+                          dataKey="section"
+                          angle={-45}
+                          textAnchor="end"
+                          height={80}
+                          fontSize={11}
+                          stroke="#6b7280"
+                        />
+                        <YAxis domain={[0, 10]} stroke="#6b7280" />
+                        <Tooltip
+                          formatter={(value, name) => [`${value}/10`, 'Puntuación']}
+                          labelFormatter={(label) => `Área: ${label}`}
+                        />
+                        <Bar dataKey="avg_score" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Tendencia de Rendimiento</CardTitle>
+                    <CardDescription className="text-gray-600">Evolución del rendimiento a lo largo del tiempo</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={data.performanceTrends} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis dataKey="month" fontSize={11} stroke="#6b7280" />
+                        <YAxis domain={[0, 10]} stroke="#6b7280" />
+                        <Tooltip
+                          formatter={(value, name) => [`${value}/10`, 'Rendimiento Promedio']}
+                          labelFormatter={(label) => `Mes: ${label}`}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="avg_performance"
+                          stroke="#3b82f6"
+                          strokeWidth={3}
+                          dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
+                          activeDot={{ r: 7, fill: '#1d4ed8' }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="teams" className="space-y-6">
+              {/* Team Analysis */}
+              <Card className="border-gray-200 bg-white">
                 <CardHeader>
-                  <CardTitle className="text-lg text-gray-900">Acciones Recomendadas</CardTitle>
-                  <CardDescription className="text-gray-600">Basadas en el análisis de datos</CardDescription>
+                  <CardTitle className="text-lg text-gray-900">Análisis Detallado por Equipos</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Comparativa de rendimiento, participación y áreas de oportunidad
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3">
-                    {data.actionableInsights.immediate_actions.map((action, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700">{action}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-
-          <TabsContent value="metrics" className="space-y-6">
-            {/* Metric Explanations */}
-            <Card className="border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-lg text-gray-900">Explicación de Métricas</CardTitle>
-                <CardDescription className="text-gray-600">Cómo se calculan las puntuaciones</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {Object.entries(data.metricExplanations).map(([key, explanation]) => (
-                    <div key={key} className="border border-gray-200 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-900 mb-2 capitalize">
-                        {key.replace(/_/g, ' ')}
-                      </h4>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <div className="font-medium text-gray-700 mb-1">Descripción:</div>
-                          <div className="text-gray-600 mb-3">{explanation.description}</div>
-                          
-                          <div className="font-medium text-gray-700 mb-1">Cálculo:</div>
-                          <div className="text-gray-600 font-mono text-xs bg-gray-100 p-2 rounded">
-                            {explanation.calculation}
-                          </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {data.efficiencyMetrics.map((team, index) => (
+                      <div key={index} className="border border-gray-200 p-6 rounded-lg bg-gray-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-semibold text-gray-900 text-lg capitalize flex items-center">
+                            {team.team === 'manager' ? (
+                              <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
+                            ) : (
+                              <Users className="w-5 h-5 mr-2 text-green-600" />
+                            )}
+                            Equipo {team.team === 'manager' ? 'Gerencial' : 'de Ventas'}
+                          </h4>
+                          <Badge variant={team.sample_size > 0 ? 'default' : 'secondary'}>
+                            {team.sample_size > 0 ? 'Con Datos' : 'Sin Datos'}
+                          </Badge>
                         </div>
                         
-                        <div>
-                          <div className="font-medium text-gray-700 mb-1">Rango Bueno:</div>
-                          <div className="text-gray-900 font-medium mb-3">{explanation.good_range}</div>
-                          
-                          <div className="font-medium text-gray-700 mb-1">Requiere Acción:</div>
-                          <div className="text-gray-900 font-medium">{explanation.action_needed}</div>
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="text-center p-3 bg-white rounded-lg border">
+                              <div className={`text-2xl font-bold ${getScoreColor(team.performance_score)}`}>
+                                {team.performance_score.toFixed(1)}/10
+                              </div>
+                              <div className="text-sm text-gray-600">Rendimiento</div>
+                            </div>
+                            <div className="text-center p-3 bg-white rounded-lg border">
+                              <div className="text-2xl font-bold text-gray-900">{team.sample_size}</div>
+                              <div className="text-sm text-gray-600">Respuestas</div>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                              <div className="text-xl font-bold text-green-700">{team.strengths}</div>
+                              <div className="text-sm text-green-600">Fortalezas</div>
+                            </div>
+                            <div className="text-center p-3 bg-red-50 rounded-lg border border-red-200">
+                              <div className="text-xl font-bold text-red-700">{team.pain_points}</div>
+                              <div className="text-sm text-red-600">Problemas</div>
+                            </div>
+                          </div>
+
+                          {team.avg_completion_time > 0 && (
+                            <div className="flex justify-between items-center p-3 bg-white rounded-lg border">
+                              <span className="text-sm text-gray-600">Tiempo promedio:</span>
+                              <span className="font-medium text-gray-900">{formatTime(team.avg_completion_time)}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-gray-500 text-sm py-4 border-t border-gray-200">
-          <p>
-            Actualizado: {new Date(data.summary.lastUpdated).toLocaleString('es-ES')} • 
-            Basado en {data.summary.total_responses} respuestas
-          </p>
+            <TabsContent value="system" className="space-y-6">
+              {/* System Status and Configuration */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Configuración del Dashboard</CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Configuración técnica y parámetros del sistema
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <h5 className="font-medium text-gray-900 mb-2">Última Actualización</h5>
+                        <p className="text-sm text-gray-600">
+                          {new Date(data.summary.lastUpdated).toLocaleString('es-ES')}
+                        </p>
+                      </div>
+
+                      <div className="p-4 bg-gray-50 rounded-lg">
+                        <h5 className="font-medium text-gray-900 mb-2">Confianza de Datos</h5>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">{data.summary.data_confidence}</span>
+                          <Badge variant={
+                            data.summary.data_confidence === 'HIGH' ? 'default' :
+                            data.summary.data_confidence === 'MODERATE' ? 'secondary' : 'outline'
+                          }>
+                            {data.summary.data_confidence === 'HIGH' ? 'Alta' :
+                             data.summary.data_confidence === 'MODERATE' ? 'Media' : 'Limitada'}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <h5 className="font-medium text-blue-900 mb-2 flex items-center">
+                          <Lightbulb className="w-4 h-4 mr-2" />
+                          Recomendación
+                        </h5>
+                        <p className="text-sm text-blue-700">
+                          {data.summary.total_responses < 10
+                            ? "Para obtener insights más precisos, se recomienda recopilar al menos 10-15 respuestas por equipo."
+                            : "El sistema tiene suficientes datos para generar insights confiables. Continue monitoreando regularmente."
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Explicación de Métricas</CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Cómo se calculan las métricas principales
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {Object.entries(data.metricExplanations).map(([key, explanation]) => (
+                        <div key={key} className="border border-gray-200 p-4 rounded-lg">
+                          <h4 className="font-semibold text-gray-900 mb-2 capitalize flex items-center">
+                            <Info className="w-4 h-4 mr-2 text-blue-500" />
+                            {key.replace(/_/g, ' ')}
+                          </h4>
+                          
+                          <div className="text-sm space-y-2">
+                            <div>
+                              <span className="font-medium text-gray-700">Descripción: </span>
+                              <span className="text-gray-600">{explanation.description}</span>
+                            </div>
+                            
+                            <div>
+                              <span className="font-medium text-gray-700">Rango Óptimo: </span>
+                              <span className="text-green-600 font-medium">{explanation.good_range}</span>
+                            </div>
+                            
+                            <div>
+                              <span className="font-medium text-gray-700">Requiere Acción: </span>
+                              <span className="text-red-600 font-medium">{explanation.action_needed}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          {/* FOOTER */}
+          <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="text-center">
+              <p className="text-gray-600 text-sm mb-2">
+                Dashboard de Analytics • Sistema de Retroalimentación
+              </p>
+              <p className="text-gray-500 text-xs">
+                Última actualización: {new Date(data.summary.lastUpdated).toLocaleString('es-ES')} •
+                Basado en {data.summary.total_responses} respuesta{data.summary.total_responses !== 1 ? 's' : ''} •
+                Confianza: {data.summary.data_confidence === 'HIGH' ? 'Alta' : 
+                           data.summary.data_confidence === 'MODERATE' ? 'Media' : 'Limitada'}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
