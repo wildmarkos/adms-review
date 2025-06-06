@@ -72,12 +72,6 @@ export interface Translations {
         description: string;
       };
     };
-    cta: {
-      title: string;
-      subtitle: string;
-      startSurvey: string;
-      exploreSample: string;
-    };
   };
 
   // Survey Interface
@@ -301,31 +295,31 @@ export const spanishTranslations: Translations = {
         impactAssessment: "Evaluación de Impacto"
       },
       actionableInsights: {
-        title: "Resultados y Recomendaciones",
-        description: "Análisis de retroalimentación con sugerencias categorizadas por horizonte temporal de implementación.",
-        quickWins: "Corto Plazo (0-30 días)",
-        mediumTerm: "Mediano Plazo (1-3 meses)",
-        strategic: "Largo Plazo (3-12 meses)"
+        title: "Plan de Optimización Estratégica",
+        description: "Roadmap ejecutivo basado en análisis cuantitativo con recomendaciones priorizadas por impacto y viabilidad de implementación.",
+        quickWins: "Victorias Rápidas • ROI Inmediato",
+        mediumTerm: "Optimización Operacional",
+        strategic: "Innovación Estratégica"
       }
     },
     challenges: {
-      title: "Áreas de Evaluación",
-      subtitle: "Aspectos principales que se evalúan en los procesos de trabajo actuales",
-      criticalIssues: "Problemas Identificados",
-      expectedOutcomes: "Objetivos de Mejora",
+      title: "Diagnóstico Estratégico de Procesos",
+      subtitle: "Evaluación sistemática basada en metodologías probadas para identificar oportunidades de optimización operacional",
+      criticalIssues: "Áreas de Diagnóstico Clave",
+      expectedOutcomes: "Resultados Esperados",
       issues: [
-        "Eficiencia en el seguimiento y gestión de procesos",
-        "Optimización del tiempo dedicado a tareas administrativas",
-        "Calidad de los procesos y resultados obtenidos",
-        "Comunicación entre diferentes niveles organizacionales",
-        "Uso de herramientas y sistemas de trabajo"
+        "Análisis de eficiencia en flujos de trabajo y gestión de prospectos",
+        "Evaluación del tiempo productivo vs. tareas administrativas",
+        "Medición de la calidad y consistencia en procesos críticos",
+        "Evaluación de la comunicación interdepartamental y escalamiento",
+        "Auditoria de herramientas tecnológicas y su adopción efectiva"
       ],
       outcomes: [
-        "Identificar oportunidades de mejora específicas",
-        "Optimizar el uso de herramientas y recursos",
-        "Mejorar la eficiencia de los procesos",
-        "Aumentar la satisfacción y productividad del equipo",
-        "Desarrollar planes de mejora basados en datos"
+        "Roadmap de mejoras priorizadas con impacto cuantificado",
+        "Optimización documentada del ROI en herramientas y recursos",
+        "Incremento medible en eficiencia operacional",
+        "Mejora en satisfacción del equipo y retención de talento",
+        "Plan de acción basado en datos con métricas de seguimiento"
       ]
     },
     surveyOverview: {
@@ -348,12 +342,6 @@ export const spanishTranslations: Translations = {
         description: "Enfocada en eficiencia del trabajo diario, gestión de tareas, comunicación y efectividad operativa."
       }
     },
-    cta: {
-      title: "Proporcione Su Retroalimentación",
-      subtitle: "Ayude a mejorar nuestros procesos internos compartiendo su experiencia y perspectivas",
-      startSurvey: "Iniciar Su Encuesta",
-      exploreSample: "Ver Datos de Ejemplo"
-    }
   },
 
   survey: {
