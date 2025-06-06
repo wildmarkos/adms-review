@@ -7,12 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import {
   TrendingUp, TrendingDown, Users, AlertTriangle, Download, RefreshCw, Target, Clock, Activity, CheckCircle,
   Award, Trophy, Star, Zap, Lightbulb, Heart, Rocket, Crown, Medal, DollarSign, Brain, Gauge,
   Info, HelpCircle, ChevronRight, ThumbsUp, Flag, BarChart3, AlertCircle, TrendingDown as TrendDown,
-  Building2, UserCheck, Briefcase, MessageSquare, FileText, Eye, ArrowUp, ArrowDown, Minus
+  Building2, UserCheck, Briefcase, MessageSquare, FileText, Eye, ArrowUp, ArrowDown, Minus, Lock
 } from 'lucide-react';
 
 interface ProfessionalInsight {
@@ -175,9 +176,32 @@ interface AnalyticsData {
 }
 
 export default function AnalyticsPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
   const [data, setData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if already authenticated (using localStorage)
+  useEffect(() => {
+    const authStatus = localStorage.getItem('analytics_auth');
+    if (authStatus === 'authenticated') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'uniat') {
+      setIsAuthenticated(true);
+      localStorage.setItem('analytics_auth', 'authenticated');
+      setAuthError('');
+      loadAnalytics();
+    } else {
+      setAuthError('Contraseña incorrecta');
+    }
+  };
 
   const loadAnalytics = async () => {
     setLoading(true);
@@ -195,8 +219,10 @@ export default function AnalyticsPage() {
   };
 
   useEffect(() => {
-    loadAnalytics();
-  }, []);
+    if (isAuthenticated) {
+      loadAnalytics();
+    }
+  }, [isAuthenticated]);
 
   const handleExportData = () => {
     if (!data) return;
@@ -238,6 +264,47 @@ export default function AnalyticsPage() {
     const minutes = Math.floor(seconds / 60);
     return `${minutes}m`;
   };
+
+  // Authentication screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <Lock className="w-8 h-8 text-blue-600" />
+            </div>
+            <CardTitle className="text-2xl">Acceso a Analytics</CardTitle>
+            <CardDescription>
+              Ingresa la contraseña para acceder al dashboard de analytics
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleAuth} className="space-y-4">
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+              {authError && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>{authError}</AlertDescription>
+                </Alert>
+              )}
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                Acceder
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -300,6 +367,17 @@ export default function AnalyticsPage() {
                 <Button size="sm" onClick={handleExportData} className="bg-blue-600 hover:bg-blue-700">
                   <Download className="w-4 h-4 mr-2" />
                   Exportar Reporte
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    setIsAuthenticated(false);
+                    localStorage.removeItem('analytics_auth');
+                  }}
+                >
+                  <Lock className="w-4 h-4 mr-2" />
+                  Cerrar Sesión
                 </Button>
               </div>
             </div>
