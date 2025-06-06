@@ -52,7 +52,7 @@ export const useSurveyStore = create<SurveyState>()(
       sessionId: null,
       userRole: null,
       userId: null,
-      isAnonymous: false,
+      isAnonymous: true,
       totalQuestions: 0,
       completedQuestions: 0,
       answers: {},
@@ -164,7 +164,6 @@ export const useSurveyStore = create<SurveyState>()(
       name: 'survey-storage',
       // Only persist essential data, not temporary state
       partialize: (state) => ({
-        userRole: state.userRole,
         userId: state.userId,
         isAnonymous: state.isAnonymous,
         currentSurveyId: state.currentSurveyId,

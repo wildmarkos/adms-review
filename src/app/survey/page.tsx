@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Users, UserCog, Shield } from 'lucide-react';
+import spanishTranslations from '@/lib/translations';
 
 interface Question {
   id: number;
@@ -32,11 +33,8 @@ interface Survey {
 
 export default function SurveyPage() {
   const {
-    userRole,
     currentSurveyId,
-    isAnonymous,
     setUserRole,
-    setAnonymous,
     startSurvey,
     resetSurvey,
   } = useSurveyStore();
@@ -45,16 +43,11 @@ export default function SurveyPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedRole, setSelectedRole] = useState<'manager' | 'sales' | null>(null);
 
-  // Load survey data if we have a current survey ID (from persisted state)
-  useEffect(() => {
-    if (currentSurveyId && userRole && !survey && !loading) {
-      loadSurveyDataAndStart(currentSurveyId);
-    }
-  }, [currentSurveyId, userRole, survey, loading]);
-
-  // Role selection step
+  // Always start fresh - don't check for existing userRole
   const handleRoleSelection = async (role: 'manager' | 'sales') => {
+    setSelectedRole(role);
     setUserRole(role);
     
     // Determine survey ID based on role
@@ -92,143 +85,126 @@ export default function SurveyPage() {
     }
   };
 
-  const handleAnonymousToggle = () => {
-    setAnonymous(!isAnonymous);
-  };
 
   const handleRestart = () => {
     resetSurvey();
     setSurvey(null);
     setQuestions([]);
     setError(null);
+    setSelectedRole(null);
   };
 
-  // If no role selected, show role selection
-  if (!userRole || !currentSurveyId) {
+  // Always show role selection first
+  if (!selectedRole || !currentSurveyId) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-6 py-4">
         <div className="max-w-4xl mx-auto">
-          <Card className="mb-8">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold mb-2">
-                Eduscore Feedback System
+          <Card>
+            <CardHeader className="text-center pb-2">
+              <CardTitle className="text-xl font-semibold mb-1">
+                {spanishTranslations.roleSelection.title}
               </CardTitle>
-              <CardDescription className="text-lg">
-                Help us improve our admissions process by sharing your insights
+              <CardDescription className="text-sm">
+                {spanishTranslations.roleSelection.subtitle}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-                <h3 className="font-semibold text-blue-800 mb-2">About This Survey</h3>
-                <p className="text-blue-700 text-sm">
-                  This feedback system uses proven methodologies including the Kirkpatrick Model, 
-                  Net Promoter Score (NPS), and Root Cause Analysis to identify specific areas 
-                  for improvement in our Eduscore CRM platform. Your responses will help us 
-                  reduce workflow inefficiencies and improve team productivity.
+            <CardContent className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <h3 className="font-semibold text-blue-800 mb-1 text-sm">
+                  {spanishTranslations.roleSelection.aboutTitle}
+                </h3>
+                <p className="text-blue-700 text-xs leading-snug">
+                  {spanishTranslations.roleSelection.aboutDescription}
                 </p>
               </div>
               
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold mb-4">Select Your Role</h3>
-                <p className="text-muted-foreground mb-6">
-                  Choose the option that best describes your current position
+              <div className="text-center">
+                <h3 className="text-base font-semibold mb-1">
+                  {spanishTranslations.roleSelection.selectRoleTitle}
+                </h3>
+                <p className="text-xs text-muted-foreground mb-3">
+                  {spanishTranslations.roleSelection.selectRoleSubtitle}
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <Card 
-                  className="cursor-pointer hover:border-primary transition-colors"
+              <div className="grid md:grid-cols-2 gap-3">
+                <Card
+                  className="cursor-pointer hover:border-primary hover:shadow-md transition-all"
                   onClick={() => handleRoleSelection('manager')}
                 >
-                  <CardHeader className="text-center">
-                    <UserCog className="w-12 h-12 mx-auto mb-4 text-primary" />
-                    <CardTitle>Manager</CardTitle>
-                    <CardDescription>
-                      Team leaders, supervisors, and management staff
+                  <CardHeader className="text-center pb-2">
+                    <UserCog className="w-8 h-8 mx-auto mb-2 text-primary" />
+                    <CardTitle className="text-base">{spanishTranslations.roleSelection.managerRole.title}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {spanishTranslations.roleSelection.managerRole.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm">
+                  <CardContent className="pt-0">
+                    <div className="space-y-1 text-xs">
                       <div className="flex items-center justify-between">
-                        <span>Questions:</span>
-                        <Badge variant="secondary">18 strategic</Badge>
+                        <span>{spanishTranslations.roleSelection.questions}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.managerRole.questions}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>Time:</span>
-                        <Badge variant="secondary">~15 minutes</Badge>
+                        <span>{spanishTranslations.roleSelection.time}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.managerRole.time}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>Focus:</span>
-                        <Badge variant="secondary">Process & ROI</Badge>
+                        <span>{spanishTranslations.roleSelection.focus}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.managerRole.focus}</Badge>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card 
-                  className="cursor-pointer hover:border-primary transition-colors"
+                <Card
+                  className="cursor-pointer hover:border-primary hover:shadow-md transition-all"
                   onClick={() => handleRoleSelection('sales')}
                 >
-                  <CardHeader className="text-center">
-                    <Users className="w-12 h-12 mx-auto mb-4 text-primary" />
-                    <CardTitle>Sales Representative</CardTitle>
-                    <CardDescription>
-                      Sales team members and representatives
+                  <CardHeader className="text-center pb-2">
+                    <Users className="w-8 h-8 mx-auto mb-2 text-primary" />
+                    <CardTitle className="text-base">{spanishTranslations.roleSelection.salesRole.title}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {spanishTranslations.roleSelection.salesRole.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm">
+                  <CardContent className="pt-0">
+                    <div className="space-y-1 text-xs">
                       <div className="flex items-center justify-between">
-                        <span>Questions:</span>
-                        <Badge variant="secondary">21 tactical</Badge>
+                        <span>{spanishTranslations.roleSelection.questions}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.salesRole.questions}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>Time:</span>
-                        <Badge variant="secondary">~12 minutes</Badge>
+                        <span>{spanishTranslations.roleSelection.time}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.salesRole.time}</Badge>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span>Focus:</span>
-                        <Badge variant="secondary">Daily workflow</Badge>
+                        <span>{spanishTranslations.roleSelection.focus}</span>
+                        <Badge variant="secondary" className="text-xs">{spanishTranslations.roleSelection.salesRole.focus}</Badge>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              <div className="mt-8 p-4 bg-muted rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Shield className="w-5 h-5" />
-                    <span className="font-medium">Privacy Option</span>
-                  </div>
-                  <Button
-                    variant={isAnonymous ? "default" : "outline"}
-                    onClick={handleAnonymousToggle}
-                    size="sm"
-                  >
-                    {isAnonymous ? "Anonymous Mode" : "Make Anonymous"}
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {isAnonymous 
-                    ? "Your responses will be completely anonymous. No personal information will be collected."
-                    : "Your responses may be linked to your role for targeted improvements. Click to enable anonymous mode."
-                  }
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">
+                  {spanishTranslations.roleSelection.anonymousNotice}
                 </p>
               </div>
 
               {error && (
-                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-red-800">{error}</p>
-                  <Button variant="outline" onClick={() => setError(null)} className="mt-2">
-                    Try Again
+                <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-800 text-xs">{error}</p>
+                  <Button variant="outline" onClick={() => setError(null)} className="mt-1 text-xs" size="sm">
+                    {spanishTranslations.roleSelection.tryAgain}
                   </Button>
                 </div>
               )}
 
               {loading && (
-                <div className="mt-4 text-center">
-                  <p className="text-muted-foreground">Loading survey...</p>
+                <div className="text-center">
+                  <p className="text-muted-foreground text-xs">{spanishTranslations.roleSelection.loadingSurvey}</p>
                 </div>
               )}
             </CardContent>
@@ -241,15 +217,15 @@ export default function SurveyPage() {
   // Show survey interface if role is selected and survey is loaded
   if (survey && questions.length > 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-4 flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">{survey.name}</h1>
-              <p className="text-muted-foreground">{survey.description}</p>
+              <h1 className="text-xl font-semibold">{survey.name}</h1>
+              <p className="text-sm text-muted-foreground">{survey.description}</p>
             </div>
-            <Button variant="outline" onClick={handleRestart} size="sm">
-              Restart Survey
+            <Button variant="outline" onClick={handleRestart} size="sm" className="text-xs">
+              {spanishTranslations.roleSelection.restartSurvey}
             </Button>
           </div>
           
@@ -261,11 +237,11 @@ export default function SurveyPage() {
 
   // Loading state
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-6">
       <div className="max-w-4xl mx-auto text-center">
         <Card>
-          <CardContent className="py-8">
-            <p className="text-lg">Loading survey...</p>
+          <CardContent className="py-6">
+            <p className="text-sm">{spanishTranslations.roleSelection.loadingSurvey}</p>
           </CardContent>
         </Card>
       </div>

@@ -176,8 +176,8 @@ export function seedDatabase() {
     VALUES (?, ?, ?, ?, ?, ?)
   `);
 
-  insertSurvey.run(1, 'Manager Feedback Survey', 'Strategic feedback from managers on Eduscore system effectiveness', 'manager', 1, 1);
-  insertSurvey.run(2, 'Sales Team Feedback Survey', 'Tactical feedback from sales representatives on daily workflow', 'sales', 1, 1);
+  insertSurvey.run(1, 'Manager Feedback Survey', 'Strategic feedback from managers on platform system effectiveness', 'manager', 1, 1);
+  insertSurvey.run(2, 'Admissions Team Feedback Survey', 'Tactical feedback from admissions advisors on daily workflow', 'sales', 1, 1);
 
   console.log('Database seeded successfully');
 }

@@ -126,7 +126,7 @@ export default function HomePage() {
                     <Badge variant="outline">18 preguntas</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Encuesta de Ventas</span>
+                    <span className="text-sm font-medium">Encuesta de Admisiones</span>
                     <Badge variant="outline">21 preguntas</Badge>
                   </div>
                 </div>

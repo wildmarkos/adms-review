@@ -74,6 +74,42 @@ export interface Translations {
     };
   };
 
+  // Role Selection Page
+  roleSelection: {
+    title: string;
+    subtitle: string;
+    aboutTitle: string;
+    aboutDescription: string;
+    selectRoleTitle: string;
+    selectRoleSubtitle: string;
+    managerRole: {
+      title: string;
+      description: string;
+      questions: string;
+      time: string;
+      focus: string;
+    };
+    salesRole: {
+      title: string;
+      description: string;
+      questions: string;
+      time: string;
+      focus: string;
+    };
+    privacyTitle: string;
+    makeAnonymous: string;
+    anonymousMode: string;
+    privacyDescription: string;
+    anonymousDescription: string;
+    questions: string;
+    time: string;
+    focus: string;
+    loadingSurvey: string;
+    tryAgain: string;
+    restartSurvey: string;
+    anonymousNotice: string;
+  };
+
   // Survey Interface
   survey: {
     title: string;
@@ -263,12 +299,47 @@ export interface Translations {
 
 export const spanishTranslations: Translations = {
   navigation: {
-    title: "Sistema de Retroalimentación Eduscore",
+    title: "Sistema de Retroalimentación",
     viewAnalytics: "Ver Análisis",
     takeSurvey: "Realizar Encuesta",
     startSurvey: "Iniciar Encuesta",
     returnHome: "Regresar al Inicio",
     exportData: "Exportar Datos"
+  },
+
+  roleSelection: {
+    title: "Sistema de Retroalimentación",
+    subtitle: "Ayude a mejorar nuestros procesos de admisión compartiendo sus perspectivas",
+    aboutTitle: "Acerca de Esta Encuesta",
+    aboutDescription: "Este sistema de retroalimentación utiliza metodologías probadas incluyendo el Modelo Kirkpatrick, Net Promoter Score (NPS), y Análisis de Causa Raíz para identificar áreas específicas de mejora en nuestra plataforma. Sus respuestas nos ayudarán a reducir ineficiencias en el flujo de trabajo y mejorar la productividad del equipo.",
+    selectRoleTitle: "Seleccione Su Función",
+    selectRoleSubtitle: "Elija la opción que mejor describe su posición actual",
+    managerRole: {
+      title: "Gerente",
+      description: "Líderes de equipo, supervisores y personal directivo",
+      questions: "18 estratégicas",
+      time: "~15 minutos",
+      focus: "Procesos y ROI"
+    },
+    salesRole: {
+      title: "Asesor de Admisiones",
+      description: "Miembros del equipo de admisiones y asesores",
+      questions: "21 tácticas",
+      time: "~12 minutos",
+      focus: "Flujo de trabajo diario"
+    },
+    privacyTitle: "Opción de Privacidad",
+    makeAnonymous: "Hacer Anónimo",
+    anonymousMode: "Modo Anónimo",
+    privacyDescription: "Sus respuestas pueden vincularse a su función para mejoras dirigidas. Haga clic para habilitar el modo anónimo.",
+    anonymousDescription: "Sus respuestas serán completamente anónimas. No se recopilará información personal.",
+    questions: "Preguntas:",
+    time: "Tiempo:",
+    focus: "Enfoque:",
+    loadingSurvey: "Cargando encuesta...",
+    tryAgain: "Intentar de nuevo",
+    restartSurvey: "Reiniciar Encuesta",
+    anonymousNotice: "✓ Sus respuestas son completamente anónimas"
   },
 
   landing: {
@@ -284,7 +355,7 @@ export const spanishTranslations: Translations = {
         title: "Encuestas por Función",
         description: "Cuestionarios específicos para diferentes roles organizacionales, recopilando retroalimentación relevante a cada función.",
         managerSurvey: "Encuesta Gerencial:",
-        salesSurvey: "Encuesta de Ventas:",
+        salesSurvey: "Encuesta de Admisiones:",
         questions: "preguntas"
       },
       evidenceBased: {
@@ -334,7 +405,7 @@ export const spanishTranslations: Translations = {
         description: "Enfocada en alineación estratégica, gestión del equipo, eficiencia de procesos y asignación de recursos."
       },
       salesSurvey: {
-        title: "Encuesta del Equipo de Ventas",
+        title: "Encuesta del Equipo de Admisiones",
         subtitle: "Perspectiva operativa",
         duration: "~12 minutos",
         questions: "21 preguntas",
@@ -345,7 +416,7 @@ export const spanishTranslations: Translations = {
   },
 
   survey: {
-    title: "Encuesta de Retroalimentación Eduscore",
+    title: "Encuesta de Retroalimentación",
     questionProgress: "Pregunta {current} de {total} • ID: {id}",
     sectionProgress: "% Completado",
     complete: "Completado",
@@ -380,12 +451,12 @@ export const spanishTranslations: Translations = {
     dailyWorkflow: "Eficiencia del Flujo de Trabajo Diario",
     leadManagement: "Gestión de Prospectos y Seguimiento",
     communication: "Comunicación y Colaboración",
-    salesEffectiveness: "Barreras de Conversión y Efectividad de Ventas",
+    salesEffectiveness: "Barreras de Conversión y Efectividad de Admisiones",
     advancedDiagnostic: "Diagnóstico Avanzado"
   },
 
   analytics: {
-    title: "Análisis de Retroalimentación Eduscore",
+    title: "Análisis de Retroalimentación",
     subtitle: "Perspectivas integrales de {count} respuestas de encuesta",
     metrics: {
       totalResponses: "Respuestas Totales",
@@ -396,7 +467,7 @@ export const spanishTranslations: Translations = {
       belowExpectations: "Por debajo de las expectativas",
       target: "Objetivo: 12-15 minutos",
       managers: "gerentes",
-      sales: "ventas"
+      sales: "admisiones"
     },
     tabs: {
       overview: "Resumen",
@@ -432,12 +503,12 @@ export const spanishTranslations: Translations = {
       }
     },
     efficiency: {
-      keyFinding: "Hallazgo Clave: Los equipos de ventas gastan 35% de su tiempo en entrada de datos en lugar de actividades de venta. Esto representa aproximadamente 14 horas por semana por representante.",
+      keyFinding: "Hallazgo Clave: Los equipos de admisiones gastan 35% de su tiempo en entrada de datos en lugar de actividades de admisión. Esto representa aproximadamente 14 horas por semana por asesor.",
       productivityImpact: {
         title: "Impacto en la Productividad",
         description: "Tiempo estimado perdido debido a ineficiencias del sistema",
-        weeklyTimeLost: "Tiempo semanal perdido por representante de ventas",
-        additionalCalls: "Llamadas de ventas adicionales potenciales",
+        weeklyTimeLost: "Tiempo semanal perdido por asesor de admisiones",
+        additionalCalls: "Llamadas de admisiones adicionales potenciales",
         revenueOpportunity: "Oportunidad estimada de ingresos"
       },
       leadConversion: {
@@ -493,11 +564,11 @@ export const spanishTranslations: Translations = {
 
   completion: {
     title: "¡Encuesta Completada Exitosamente!",
-    subtitle: "Gracias por tomarse el tiempo para proporcionar retroalimentación valiosa sobre su experiencia con Eduscore.",
+    subtitle: "Gracias por tomarse el tiempo para proporcionar retroalimentación valiosa sobre su experiencia con la plataforma.",
     completionRate: "Tasa de Finalización",
     questionsAnswered: "Preguntas Respondidas",
     managerSurveyCompleted: "Encuesta Gerencial Completada",
-    salesSurveyCompleted: "Encuesta del Equipo de Ventas Completada",
+    salesSurveyCompleted: "Encuesta del Equipo de Admisiones Completada",
     whatHappensNext: {
       title: "¿Qué sigue?",
       items: [
@@ -510,7 +581,7 @@ export const spanishTranslations: Translations = {
     },
     impact: {
       title: "Su Impacto",
-      description: "Su retroalimentación es fundamental para ayudar a mejorar el sistema Eduscore para todo el equipo de admisiones. Basándose en análisis recientes de retroalimentación y datos actuales de encuestas, los equipos típicamente ven:",
+      description: "Su retroalimentación es fundamental para ayudar a mejorar la plataforma para todo el equipo de admisiones. Basándose en análisis recientes de retroalimentación y datos actuales de encuestas, los equipos típicamente ven:",
       dataEntryReduction: "Reducción en tiempo de entrada de datos",
       leadResponseImprovement: "Mejora en respuesta a prospectos",
       productivityIncrease: "Aumento en productividad"
@@ -548,8 +619,8 @@ export const spanishTranslations: Translations = {
     prospects: "Prospectos",
     enrollment: "Inscripción",
     conversion: "Conversión",
-    pipeline: "Canal de Ventas",
-    representative: "Representante"
+    pipeline: "Canal de Admisiones",
+    representative: "Asesor"
   }
 };
 
