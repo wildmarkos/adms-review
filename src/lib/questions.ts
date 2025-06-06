@@ -43,7 +43,7 @@ export const managerQuestions: Omit<Question, 'id'>[] = [
   {
     survey_id: 1,
     section: "Alineación Estratégica y Objetivos",
-    question_text: "Califique la alineación entre las capacidades de Eduscore y sus objetivos empresariales:",
+    question_text: "¿Qué tanto están relacionadas las habilidades de Eduscore con los objetivos del negocio?",
     question_type: "likert",
     question_order: 3,
     is_required: true,
@@ -338,7 +338,7 @@ export const salesQuestions: Omit<Question, 'id'>[] = [
   {
     survey_id: 2,
     section: "Comunicación y Colaboración",
-    question_text: "¿Qué brechas de comunicación existen entre usted y la gerencia respecto a su rendimiento? (Seleccione todos los que apliquen)",
+    question_text: "¿En qué cosas cree que hay falta de comunicación entre usted y la gerencia sobre su desempeño? (Marque todas las que apliquen)",
     question_type: "checkbox",
     question_order: 13,
     is_required: false,
