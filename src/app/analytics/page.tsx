@@ -475,130 +475,127 @@ export default function AnalyticsPage() {
           </div>
 
           {/* MAIN ANALYTICS TABS */}
-          <Tabs defaultValue="executive" className="space-y-6">
+          <Tabs defaultValue="resumen" className="space-y-6">
             <TabsList className="grid w-full grid-cols-4 bg-white border border-gray-200">
-              <TabsTrigger value="executive" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
-                Resumen Ejecutivo
+              <TabsTrigger value="resumen" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Resumen Simple
               </TabsTrigger>
-              <TabsTrigger value="business" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
-                Métricas de Negocio
+              <TabsTrigger value="areas" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Áreas Principales
               </TabsTrigger>
-              <TabsTrigger value="teams" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
-                Análisis por Equipos
+              <TabsTrigger value="eficiencia" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Eficiencia del Equipo
               </TabsTrigger>
-              <TabsTrigger value="system" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
-                Configuración
+              <TabsTrigger value="recomendaciones" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
+                Recomendaciones
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="executive" className="space-y-6">
-              {/* Business Metrics Overview */}
+            <TabsContent value="resumen" className="space-y-6">
+              {/* Simple Summary - Basic completion stats and response counts */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
                     <CardTitle className="text-lg text-gray-900 flex items-center">
-                      <Activity className="w-5 h-5 mr-2 text-blue-600" />
-                      Eficiencia del Proceso de Admisión
+                      <Users className="w-5 h-5 mr-2 text-blue-600" />
+                      Participación
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {data.summary.total_responses > 0 ? (
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Tiempo de Ventas vs Admin:</span>
-                          <div className="flex flex-col items-end">
-                            <span className={`font-bold ${data.businessMetrics?.operationalEfficiency?.adminTimeRatio === 0 ? 'text-red-600' : 'text-blue-600'}`}>
-                              {data.businessMetrics?.operationalEfficiency?.adminTimeRatio !== undefined ?
-                                `${(data.businessMetrics.operationalEfficiency.adminTimeRatio * 10).toFixed(0)}%` : 'Sin Datos'}
-                            </span>
-                            {data.businessMetrics?.operationalEfficiency?.adminTimeRatio === 0 && (
-                              <span className="text-xs text-red-600 font-medium">
-                                Pérdida: ~10 inscripciones/mes
-                              </span>
-                            )}
-                          </div>
+                    <div className="space-y-4">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-blue-600 mb-2">
+                          {data.summary.total_responses}
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Simplicidad del Sistema:</span>
-                          <div className="flex flex-col items-end">
-                            <span className="font-bold text-orange-600">
-                              {data.businessMetrics?.operationalEfficiency?.systemComplexity !== undefined ?
-                                `${(data.businessMetrics.operationalEfficiency.systemComplexity * 10).toFixed(0)}%` : 'Sin Datos'}
-                            </span>
-                            <span className="text-xs text-orange-600">
-                              Meta: 80%+ para eficiencia
-                            </span>
-                          </div>
+                        <p className="text-gray-700 text-sm font-medium">Respuestas Completadas</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="font-bold text-gray-900">{data.summary.manager_participation}</div>
+                          <div className="text-gray-600">Gerentes</div>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Acceso a Información:</span>
-                          <span className="font-bold text-green-600">
-                            {data.businessMetrics?.operationalEfficiency?.workflowEfficiency !== undefined && data.businessMetrics.operationalEfficiency.workflowEfficiency > 0 ?
-                              `${(data.businessMetrics.operationalEfficiency.workflowEfficiency * 10).toFixed(0)}%` : 'N/A'}
-                          </span>
+                        <div className="text-center p-2 bg-gray-50 rounded">
+                          <div className="font-bold text-gray-900">{data.summary.sales_participation}</div>
+                          <div className="text-gray-600">Ventas</div>
                         </div>
                       </div>
-                    ) : (
-                      <div className="text-center py-6">
-                        <div className="text-4xl font-bold text-green-600 mb-2">
-                          {((data.businessMetrics.systemEfficiency.workflowEffectiveness +
-                             data.businessMetrics.operationalEfficiency.workflowEfficiency) / 2 * 10).toFixed(0)}%
-                        </div>
-                        <p className="text-gray-700 text-sm font-medium">Eficiencia General</p>
-                        <p className="text-gray-500 text-xs mt-1">
-                          Basado en {data.summary.total_responses} respuestas del equipo
-                        </p>
-                      </div>
-                    )}
+                    </div>
                   </CardContent>
                 </Card>
 
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
                     <CardTitle className="text-lg text-gray-900 flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-purple-600" />
-                      Efectividad de Coordinación
+                      <Clock className="w-5 h-5 mr-2 text-green-600" />
+                      Tiempo de Respuesta
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {data.summary.total_responses > 0 ? (
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Monitoreo de Rendimiento:</span>
-                          <span className="font-bold text-purple-600">
-                            {data.businessMetrics?.teamPerformance?.managerEffectiveness !== undefined && data.businessMetrics.teamPerformance.managerEffectiveness > 0 ?
-                              `${(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}%` : 'Sin Datos Gerenciales'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Acceso a Info de Prospectos:</span>
-                          <span className="font-bold text-blue-600">
-                            {data.businessMetrics?.teamPerformance?.salesProductivity !== undefined && data.businessMetrics.teamPerformance.salesProductivity > 0 ?
-                              `${(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}%` : 'N/A'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-sm text-gray-600">Intercambio de Información:</span>
-                          <span className="font-bold text-green-600">
-                            {data.businessMetrics?.teamPerformance?.collaborationQuality !== undefined && data.businessMetrics.teamPerformance.collaborationQuality > 0 ?
-                              `${(data.businessMetrics.teamPerformance.collaborationQuality * 10).toFixed(0)}%` : 'N/A'}
-                          </span>
-                        </div>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-green-600 mb-2">
+                        {Math.round(data.summary.avg_completion_time / 60)}m
                       </div>
-                    ) : (
-                      <div className="text-center py-6">
-                        <div className="text-4xl font-bold text-purple-600 mb-2">
-                          {((data.businessMetrics.teamPerformance.managerEffectiveness +
-                             data.businessMetrics.teamPerformance.salesProductivity +
-                             data.businessMetrics.teamPerformance.collaborationQuality) / 3 * 10).toFixed(0)}%
-                        </div>
-                        <p className="text-gray-700 text-sm font-medium">Efectividad del Equipo</p>
-                        <p className="text-gray-500 text-xs mt-1">
-                          Gerentes: {(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}% •
-                          Ventas: {(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}%
-                        </p>
+                      <p className="text-gray-700 text-sm font-medium">Tiempo Promedio</p>
+                      <p className="text-gray-500 text-xs mt-1">
+                        {data.summary.avg_completion_time < 300 ? 'Muy eficiente' :
+                         data.summary.avg_completion_time < 600 ? 'Eficiente' : 'Puede mejorar'}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Activity className="w-5 h-5 mr-2 text-purple-600" />
+                      Estado General
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-purple-600 mb-2">
+                        {data.systemHealth.overall_health_score.toFixed(1)}/10
                       </div>
-                    )}
+                      <p className="text-gray-700 text-sm font-medium">Puntuación General</p>
+                      <p className="text-gray-500 text-xs mt-1">{data.systemHealth.health_status}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Real Metrics from Survey Data */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Activity className="w-5 h-5 mr-2 text-blue-600" />
+                      Métricas del Proceso de Admisión
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Eficiencia de Ventas:</span>
+                        <span className={`font-bold ${data.businessMetrics?.operationalEfficiency?.adminTimeRatio && data.businessMetrics.operationalEfficiency.adminTimeRatio > 0 ? 'text-blue-600' : 'text-gray-500'}`}>
+                          {data.businessMetrics?.operationalEfficiency?.adminTimeRatio !== undefined && data.businessMetrics.operationalEfficiency.adminTimeRatio > 0 ?
+                            `${(data.businessMetrics.operationalEfficiency.adminTimeRatio * 10).toFixed(0)}%` : 'Pendiente datos'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Simplicidad del Sistema:</span>
+                        <span className={`font-bold ${data.businessMetrics?.operationalEfficiency?.systemComplexity && data.businessMetrics.operationalEfficiency.systemComplexity > 0 ? 'text-orange-600' : 'text-gray-500'}`}>
+                          {data.businessMetrics?.operationalEfficiency?.systemComplexity !== undefined && data.businessMetrics.operationalEfficiency.systemComplexity > 0 ?
+                            `${(data.businessMetrics.operationalEfficiency.systemComplexity * 10).toFixed(0)}%` : 'Pendiente datos'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Efectividad del Workflow:</span>
+                        <span className={`font-bold ${data.businessMetrics?.systemEfficiency?.workflowEffectiveness && data.businessMetrics.systemEfficiency.workflowEffectiveness > 0 ? 'text-green-600' : 'text-gray-500'}`}>
+                          {data.businessMetrics?.systemEfficiency?.workflowEffectiveness !== undefined && data.businessMetrics.systemEfficiency.workflowEffectiveness > 0 ?
+                            `${(data.businessMetrics.systemEfficiency.workflowEffectiveness * 10).toFixed(0)}%` : 'Pendiente datos'}
+                        </span>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -606,7 +603,7 @@ export default function AnalyticsPage() {
                   <CardHeader>
                     <CardTitle className="text-lg text-gray-900 flex items-center">
                       <Target className="w-5 h-5 mr-2 text-green-600" />
-                      Próximos Pasos
+                      Próximos Pasos Basados en Datos
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -620,145 +617,47 @@ export default function AnalyticsPage() {
                               <p className="text-gray-600 text-xs">Dirigir a los equipos a completar las encuestas</p>
                             </div>
                           </div>
-                          
                           <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
                             <div className="w-6 h-6 rounded-full bg-gray-400 text-white text-xs flex items-center justify-center font-bold">2</div>
                             <div>
-                              <p className="font-medium text-gray-900 text-sm">Monitorear Participación</p>
-                              <p className="text-gray-600 text-xs">Objetivo: 80% de participación del equipo</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-6 h-6 rounded-full bg-gray-400 text-white text-xs flex items-center justify-center font-bold">3</div>
-                            <div>
-                              <p className="font-medium text-gray-900 text-sm">Analizar Resultados</p>
-                              <p className="text-gray-600 text-xs">Review insights profesionales y tomar acciones</p>
+                              <p className="font-medium text-gray-900 text-sm">Objetivo de Participación</p>
+                              <p className="text-gray-600 text-xs">Meta: Al menos 10 respuestas por equipo</p>
                             </div>
                           </div>
                         </>
                       ) : (
                         <>
-                          {/* Real-time insights based on calculated metrics */}
-                          {data.businessMetrics.teamPerformance.salesProductivity > 8 && (
+                          {data.businessMetrics.operationalEfficiency.adminTimeRatio < 5 && data.businessMetrics.operationalEfficiency.adminTimeRatio > 0 && (
+                            <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold">!</div>
+                              <div>
+                                <p className="font-medium text-orange-900 text-sm">Optimizar Distribución de Tiempo</p>
+                                <p className="text-orange-700 text-xs">
+                                  Eficiencia de ventas: {(data.businessMetrics.operationalEfficiency.adminTimeRatio * 10).toFixed(0)}% - Revisar balance admin/ventas
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          {data.businessMetrics.operationalEfficiency.systemComplexity > 0 && data.businessMetrics.operationalEfficiency.systemComplexity < 8 && (
+                            <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                              <div className="w-6 h-6 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center font-bold">⚠</div>
+                              <div>
+                                <p className="font-medium text-yellow-900 text-sm">Simplificar Herramientas</p>
+                                <p className="text-yellow-700 text-xs">
+                                  Simplicidad: {(data.businessMetrics.operationalEfficiency.systemComplexity * 10).toFixed(0)}% - Considerar estandarización
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                          {data.businessMetrics.teamPerformance.salesProductivity > 7 && (
                             <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
                               <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center font-bold">✓</div>
                               <div>
-                                <p className="font-medium text-gray-900 text-sm">Excelente Productividad</p>
-                                <p className="text-gray-600 text-xs">Los asesores están rindiendo al {(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}% - mantener este nivel</p>
+                                <p className="font-medium text-gray-900 text-sm">Buen Rendimiento</p>
+                                <p className="text-gray-600 text-xs">Productividad: {(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}% - Mantener nivel</p>
                               </div>
                             </div>
                           )}
-                          
-                          {data.businessMetrics.teamPerformance.managerEffectiveness < 6 && (
-                            <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
-                              <div className="w-6 h-6 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center font-bold">!</div>
-                              <div>
-                                <p className="font-medium text-gray-900 text-sm">Mejorar Liderazgo</p>
-                                <p className="text-gray-600 text-xs">Efectividad gerencial al {(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}% - revisar procesos de monitoreo</p>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {data.businessMetrics.operationalEfficiency.adminTimeRatio === 0 && (
-                            <div className="flex items-start space-x-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                              <div className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold">!</div>
-                              <div>
-                                <p className="font-medium text-red-900 text-sm">¡CRISIS DE PRODUCTIVIDAD!</p>
-                                <p className="text-red-700 text-xs mb-2">
-                                  <strong>Problema:</strong> Asesores dedican 100% tiempo a entrada de datos, 0% a ventas directas
-                                </p>
-                                <p className="text-red-700 text-xs mb-1">
-                                  <strong>Impacto:</strong> 8 horas/día perdidas por asesor = 0 conversiones
-                                </p>
-                                <p className="text-red-700 text-xs">
-                                  <strong>Acción:</strong> 1) Automatizar entrada de datos 2) Redistribuir tareas 3) Meta: 60% ventas, 40% admin
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {data.businessMetrics.operationalEfficiency.systemComplexity > 0 && data.businessMetrics.operationalEfficiency.systemComplexity < 8 && (
-                            <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                              <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold">⚠</div>
-                              <div>
-                                <p className="font-medium text-orange-900 text-sm">Complejidad de Herramientas Mixta</p>
-                                <p className="text-orange-700 text-xs mb-1">
-                                  <strong>Situación:</strong> Algunos usan pocas herramientas (1-2), otros muchas (7-8)
-                                </p>
-                                <p className="text-orange-700 text-xs">
-                                  <strong>Acción:</strong> Estandarizar a máximo 3 herramientas principales para todo el equipo
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
-                      
-                      {data.summary.total_responses > 0 && (
-                        data.actionableInsights.improvement_opportunities.slice(0, 2).map((item, index) => (
-                          <div key={index} className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
-                            <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold">{index + 1}</div>
-                            <div>
-                              <p className="font-medium text-gray-900 text-sm">Acción Recomendada</p>
-                              <p className="text-gray-600 text-xs">{item}</p>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                      
-                      {/* Financial Impact and Action Plan */}
-                      {data.businessMetrics.operationalEfficiency.adminTimeRatio === 0 && (
-                        <>
-                          <div className="flex items-start space-x-3 p-4 bg-slate-100 rounded-lg border">
-                            <div className="w-6 h-6 rounded-full bg-slate-600 text-white text-xs flex items-center justify-center font-bold">$</div>
-                            <div className="w-full">
-                              <p className="font-bold text-slate-900 text-sm mb-2">💰 Impacto Financiero Mensual</p>
-                              <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div>
-                                  <span className="text-slate-600">Tiempo perdido/día:</span>
-                                  <span className="text-slate-900 font-bold ml-1">16 horas</span>
-                                </div>
-                                <div>
-                                  <span className="text-slate-600">Costo oportunidad:</span>
-                                  <span className="text-red-600 font-bold ml-1">$50,000</span>
-                                </div>
-                                <div>
-                                  <span className="text-slate-600">Inscripciones perdidas:</span>
-                                  <span className="text-red-600 font-bold ml-1">~10/mes</span>
-                                </div>
-                                <div>
-                                  <span className="text-slate-600">ROI optimización:</span>
-                                  <span className="text-green-600 font-bold ml-1">300%</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <div className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">📋</div>
-                            <div className="w-full">
-                              <p className="font-bold text-blue-900 text-sm mb-2">Plan de Acción 30 Días</p>
-                              <div className="space-y-1 text-xs">
-                                <div className="flex justify-between">
-                                  <span className="text-blue-700">Semana 1: Automatizar entrada de datos</span>
-                                  <span className="text-blue-600 font-bold">Prioridad 1</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-blue-700">Semana 2: Capacitar en herramientas nuevas</span>
-                                  <span className="text-blue-600 font-bold">Prioridad 2</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-blue-700">Semana 3: Redistribuir tareas 60/40</span>
-                                  <span className="text-blue-600 font-bold">Prioridad 1</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-blue-700">Semana 4: Medir resultados</span>
-                                  <span className="text-green-600 font-bold">Meta: +5 inscripciones</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                         </>
                       )}
                     </div>
@@ -767,41 +666,193 @@ export default function AnalyticsPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="business" className="space-y-6">
-              {/* Performance by Section */}
+            <TabsContent value="areas" className="space-y-6">
+              {/* Top Issues from Survey Responses */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Rendimiento por Área Funcional</CardTitle>
-                    <CardDescription className="text-gray-600">Puntuaciones promedio por sección evaluada</CardDescription>
+                    <CardTitle className="text-lg text-gray-900">Rendimiento por Área</CardTitle>
+                    <CardDescription className="text-gray-600">Puntuaciones promedio de las secciones evaluadas</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={data.sectionPerformance} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                        <XAxis
-                          dataKey="section"
-                          angle={-45}
-                          textAnchor="end"
-                          height={80}
-                          fontSize={11}
-                          stroke="#6b7280"
-                        />
-                        <YAxis domain={[0, 10]} stroke="#6b7280" />
-                        <Tooltip
-                          formatter={(value, name) => [`${value}/10`, 'Puntuación']}
-                          labelFormatter={(label) => `Área: ${label}`}
-                        />
-                        <Bar dataKey="avg_score" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                    {data.sectionPerformance.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={data.sectionPerformance} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                          <XAxis
+                            dataKey="section"
+                            angle={-45}
+                            textAnchor="end"
+                            height={80}
+                            fontSize={11}
+                            stroke="#6b7280"
+                          />
+                          <YAxis domain={[0, 10]} stroke="#6b7280" />
+                          <Tooltip
+                            formatter={(value, name) => [`${value}/10`, 'Puntuación']}
+                            labelFormatter={(label) => `Área: ${label}`}
+                          />
+                          <Bar dataKey="avg_score" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="text-center py-12">
+                        <div className="text-gray-500 mb-2">
+                          <BarChart3 className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                        </div>
+                        <p className="text-gray-600">No hay datos suficientes para mostrar el gráfico</p>
+                        <p className="text-gray-500 text-sm">Se necesitan al menos 3 respuestas</p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Tendencia de Rendimiento</CardTitle>
-                    <CardDescription className="text-gray-600">Evolución del rendimiento a lo largo del tiempo</CardDescription>
+                    <CardTitle className="text-lg text-gray-900">Problemas Identificados</CardTitle>
+                    <CardDescription className="text-gray-600">Issues detectados en las respuestas del equipo</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {data.criticalIssues && data.criticalIssues.length > 0 ? (
+                        data.criticalIssues.slice(0, 5).map((issue, index) => (
+                          <div key={index} className="p-3 border border-gray-200 rounded-lg">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-900 text-sm">{issue.section}</p>
+                                <p className="text-gray-600 text-xs mt-1 line-clamp-2">{issue.question_text}</p>
+                              </div>
+                              <div className="ml-3 flex flex-col items-end">
+                                <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                  issue.severity_score <= 2 ? 'bg-red-100 text-red-700' :
+                                  issue.severity_score <= 4 ? 'bg-orange-100 text-orange-700' :
+                                  'bg-yellow-100 text-yellow-700'
+                                }`}>
+                                  {issue.severity_score}/10
+                                </div>
+                                <p className="text-xs text-gray-500 mt-1">{issue.issue_category}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8">
+                          <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                          <p className="text-gray-600">No se han detectado problemas críticos</p>
+                          <p className="text-gray-500 text-sm">El sistema está funcionando bien</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Excellence Areas */}
+              {data.excellenceAreas && data.excellenceAreas.length > 0 && (
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Star className="w-5 h-5 mr-2 text-yellow-500" />
+                      Áreas de Excelencia
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Secciones con puntuaciones superiores a 8/10
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {data.excellenceAreas.map((area, index) => (
+                        <div key={index} className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-green-900">{area.section}</h4>
+                            <div className="text-xl font-bold text-green-700">
+                              {area.avg_score.toFixed(1)}/10
+                            </div>
+                          </div>
+                          <p className="text-sm text-green-600">
+                            {area.response_count} respuesta{area.response_count !== 1 ? 's' : ''}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="eficiencia" className="space-y-6">
+              {/* Team Efficiency Metrics */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {data.efficiencyMetrics.map((team, index) => (
+                  <Card key={index} className="border-gray-200 bg-white">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-gray-900 flex items-center">
+                        {team.team === 'manager' ? (
+                          <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
+                        ) : (
+                          <Users className="w-5 h-5 mr-2 text-green-600" />
+                        )}
+                        Equipo {team.team === 'manager' ? 'Gerencial' : 'de Ventas'}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600">
+                        Métricas de eficiencia basadas en {team.sample_size} respuesta{team.sample_size !== 1 ? 's' : ''}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {/* Performance Score */}
+                        <div className="text-center p-4 bg-gray-50 rounded-lg">
+                          <div className={`text-3xl font-bold ${getScoreColor(team.performance_score)} mb-1`}>
+                            {team.performance_score.toFixed(1)}/10
+                          </div>
+                          <p className="text-sm text-gray-600">Rendimiento General</p>
+                        </div>
+
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="text-center p-3 bg-green-50 rounded border border-green-200">
+                            <div className="text-lg font-bold text-green-700">{team.strengths}</div>
+                            <div className="text-xs text-green-600">Fortalezas</div>
+                          </div>
+                          <div className="text-center p-3 bg-red-50 rounded border border-red-200">
+                            <div className="text-lg font-bold text-red-700">{team.pain_points}</div>
+                            <div className="text-xs text-red-600">Problemas</div>
+                          </div>
+                          <div className="text-center p-3 bg-blue-50 rounded border border-blue-200">
+                            <div className="text-lg font-bold text-blue-700">{team.sample_size}</div>
+                            <div className="text-xs text-blue-600">Respuestas</div>
+                          </div>
+                        </div>
+
+                        {/* Completion Time */}
+                        {team.avg_completion_time > 0 && (
+                          <div className="flex justify-between items-center p-3 bg-gray-50 rounded border">
+                            <span className="text-sm text-gray-600">Tiempo de encuesta:</span>
+                            <span className="font-medium text-gray-900">{formatTime(team.avg_completion_time)}</span>
+                          </div>
+                        )}
+
+                        {/* Status Badge */}
+                        <div className="text-center">
+                          <Badge variant={team.sample_size > 5 ? 'default' : team.sample_size > 0 ? 'secondary' : 'outline'}>
+                            {team.sample_size > 5 ? 'Datos Suficientes' :
+                             team.sample_size > 0 ? 'Datos Limitados' : 'Sin Datos'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Team Performance Trends */}
+              {data.performanceTrends && data.performanceTrends.length > 0 && (
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Tendencia de Rendimiento del Equipo</CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Evolución del rendimiento a lo largo del tiempo
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
@@ -825,158 +876,246 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
-              </div>
-            </TabsContent>
+              )}
 
-            <TabsContent value="teams" className="space-y-6">
-              {/* Team Analysis */}
-              <Card className="border-gray-200 bg-white">
-                <CardHeader>
-                  <CardTitle className="text-lg text-gray-900">Análisis Detallado por Equipos</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Comparativa de rendimiento, participación y áreas de oportunidad
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {data.efficiencyMetrics.map((team, index) => (
-                      <div key={index} className="border border-gray-200 p-6 rounded-lg bg-gray-50">
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="font-semibold text-gray-900 text-lg capitalize flex items-center">
-                            {team.team === 'manager' ? (
-                              <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
-                            ) : (
-                              <Users className="w-5 h-5 mr-2 text-green-600" />
-                            )}
-                            Equipo {team.team === 'manager' ? 'Gerencial' : 'de Ventas'}
-                          </h4>
-                          <Badge variant={team.sample_size > 0 ? 'default' : 'secondary'}>
-                            {team.sample_size > 0 ? 'Con Datos' : 'Sin Datos'}
-                          </Badge>
-                        </div>
-                        
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="text-center p-3 bg-white rounded-lg border">
-                              <div className={`text-2xl font-bold ${getScoreColor(team.performance_score)}`}>
-                                {team.performance_score.toFixed(1)}/10
-                              </div>
-                              <div className="text-sm text-gray-600">Rendimiento</div>
-                            </div>
-                            <div className="text-center p-3 bg-white rounded-lg border">
-                              <div className="text-2xl font-bold text-gray-900">{team.sample_size}</div>
-                              <div className="text-sm text-gray-600">Respuestas</div>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                              <div className="text-xl font-bold text-green-700">{team.strengths}</div>
-                              <div className="text-sm text-green-600">Fortalezas</div>
-                            </div>
-                            <div className="text-center p-3 bg-red-50 rounded-lg border border-red-200">
-                              <div className="text-xl font-bold text-red-700">{team.pain_points}</div>
-                              <div className="text-sm text-red-600">Problemas</div>
-                            </div>
-                          </div>
-
-                          {team.avg_completion_time > 0 && (
-                            <div className="flex justify-between items-center p-3 bg-white rounded-lg border">
-                              <span className="text-sm text-gray-600">Tiempo promedio:</span>
-                              <span className="font-medium text-gray-900">{formatTime(team.avg_completion_time)}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="system" className="space-y-6">
-              {/* System Status and Configuration */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Team Coordination Metrics */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Configuración del Dashboard</CardTitle>
-                    <CardDescription className="text-gray-600">
-                      Configuración técnica y parámetros del sistema
-                    </CardDescription>
+                    <CardTitle className="text-lg text-gray-900">Coordinación</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <h5 className="font-medium text-gray-900 mb-2">Última Actualización</h5>
-                        <p className="text-sm text-gray-600">
-                          {new Date(data.summary.lastUpdated).toLocaleString('es-ES')}
-                        </p>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600 mb-2">
+                        {data.businessMetrics?.teamPerformance?.managerEffectiveness !== undefined && data.businessMetrics.teamPerformance.managerEffectiveness > 0 ?
+                          `${(data.businessMetrics.teamPerformance.managerEffectiveness * 10).toFixed(0)}%` : 'N/A'}
                       </div>
-
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <h5 className="font-medium text-gray-900 mb-2">Confianza de Datos</h5>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">{data.summary.data_confidence}</span>
-                          <Badge variant={
-                            data.summary.data_confidence === 'HIGH' ? 'default' :
-                            data.summary.data_confidence === 'MODERATE' ? 'secondary' : 'outline'
-                          }>
-                            {data.summary.data_confidence === 'HIGH' ? 'Alta' :
-                             data.summary.data_confidence === 'MODERATE' ? 'Media' : 'Limitada'}
-                          </Badge>
-                        </div>
-                      </div>
-
-                      <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <h5 className="font-medium text-blue-900 mb-2 flex items-center">
-                          <Lightbulb className="w-4 h-4 mr-2" />
-                          Recomendación
-                        </h5>
-                        <p className="text-sm text-blue-700">
-                          {data.summary.total_responses < 10
-                            ? "Para obtener insights más precisos, se recomienda recopilar al menos 10-15 respuestas por equipo."
-                            : "El sistema tiene suficientes datos para generar insights confiables. Continue monitoreando regularmente."
-                          }
-                        </p>
-                      </div>
+                      <p className="text-sm text-gray-600">Efectividad Gerencial</p>
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="border-gray-200 bg-white">
                   <CardHeader>
-                    <CardTitle className="text-lg text-gray-900">Explicación de Métricas</CardTitle>
+                    <CardTitle className="text-lg text-gray-900">Productividad</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600 mb-2">
+                        {data.businessMetrics?.teamPerformance?.salesProductivity !== undefined && data.businessMetrics.teamPerformance.salesProductivity > 0 ?
+                          `${(data.businessMetrics.teamPerformance.salesProductivity * 10).toFixed(0)}%` : 'N/A'}
+                      </div>
+                      <p className="text-sm text-gray-600">Productividad de Ventas</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Colaboración</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600 mb-2">
+                        {data.businessMetrics?.teamPerformance?.collaborationQuality !== undefined && data.businessMetrics.teamPerformance.collaborationQuality > 0 ?
+                          `${(data.businessMetrics.teamPerformance.collaborationQuality * 10).toFixed(0)}%` : 'N/A'}
+                      </div>
+                      <p className="text-sm text-gray-600">Calidad de Colaboración</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="recomendaciones" className="space-y-6">
+              {/* Actionable Insights */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Target className="w-5 h-5 mr-2 text-red-600" />
+                      Acciones Inmediatas
+                    </CardTitle>
                     <CardDescription className="text-gray-600">
-                      Cómo se calculan las métricas principales
+                      Problemas que requieren atención urgente
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {Object.entries(data.metricExplanations).map(([key, explanation]) => (
-                        <div key={key} className="border border-gray-200 p-4 rounded-lg">
-                          <h4 className="font-semibold text-gray-900 mb-2 capitalize flex items-center">
-                            <Info className="w-4 h-4 mr-2 text-blue-500" />
-                            {key.replace(/_/g, ' ')}
-                          </h4>
-                          
-                          <div className="text-sm space-y-2">
-                            <div>
-                              <span className="font-medium text-gray-700">Descripción: </span>
-                              <span className="text-gray-600">{explanation.description}</span>
+                    <div className="space-y-3">
+                      {data.actionableInsights.immediate_actions && data.actionableInsights.immediate_actions.length > 0 ? (
+                        data.actionableInsights.immediate_actions.map((action, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                              !
                             </div>
-                            
-                            <div>
-                              <span className="font-medium text-gray-700">Rango Óptimo: </span>
-                              <span className="text-green-600 font-medium">{explanation.good_range}</span>
-                            </div>
-                            
-                            <div>
-                              <span className="font-medium text-gray-700">Requiere Acción: </span>
-                              <span className="text-red-600 font-medium">{explanation.action_needed}</span>
-                            </div>
+                            <p className="text-sm text-red-800">{action}</p>
                           </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-6">
+                          <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                          <p className="text-gray-600">No hay acciones urgentes pendientes</p>
                         </div>
-                      ))}
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Lightbulb className="w-5 h-5 mr-2 text-orange-600" />
+                      Oportunidades de Mejora
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Sugerencias para optimizar el proceso
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {data.actionableInsights.improvement_opportunities && data.actionableInsights.improvement_opportunities.length > 0 ? (
+                        data.actionableInsights.improvement_opportunities.map((opportunity, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                              {index + 1}
+                            </div>
+                            <p className="text-sm text-orange-800">{opportunity}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-6">
+                          <ThumbsUp className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                          <p className="text-gray-600">El sistema está optimizado</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Strategic Recommendations and Celebrations */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Brain className="w-5 h-5 mr-2 text-blue-600" />
+                      Recomendaciones Estratégicas
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Mejoras a largo plazo basadas en análisis
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {data.actionableInsights.strategic_recommendations && data.actionableInsights.strategic_recommendations.length > 0 ? (
+                        data.actionableInsights.strategic_recommendations.map((recommendation, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                              📋
+                            </div>
+                            <p className="text-sm text-blue-800">{recommendation}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-6">
+                          <Flag className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                          <p className="text-gray-600">No hay recomendaciones estratégicas pendientes</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900 flex items-center">
+                      <Trophy className="w-5 h-5 mr-2 text-yellow-600" />
+                      Logros y Fortalezas
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Aspectos que funcionan bien y deben mantenerse
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {data.actionableInsights.celebration_worthy && data.actionableInsights.celebration_worthy.length > 0 ? (
+                        data.actionableInsights.celebration_worthy.map((achievement, index) => (
+                          <div key={index} className="flex items-start space-x-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center font-bold flex-shrink-0 mt-0.5">
+                              ✓
+                            </div>
+                            <p className="text-sm text-green-800">{achievement}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-6">
+                          <Award className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                          <p className="text-gray-600">Completa más encuestas para identificar fortalezas</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* System Configuration and Data Quality */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Calidad de Datos</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-2">
+                      {data.summary.data_confidence === 'HIGH' ? 'Alta' :
+                       data.summary.data_confidence === 'MODERATE' ? 'Media' : 'Limitada'}
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Basado en {data.summary.total_responses} respuesta{data.summary.total_responses !== 1 ? 's' : ''}
+                    </p>
+                    <div className="mt-3">
+                      <Badge variant={
+                        data.summary.data_confidence === 'HIGH' ? 'default' :
+                        data.summary.data_confidence === 'MODERATE' ? 'secondary' : 'outline'
+                      }>
+                        {data.summary.total_responses >= 15 ? 'Datos suficientes' :
+                         data.summary.total_responses >= 5 ? 'Datos moderados' : 'Necesita más datos'}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Próxima Revisión</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="text-2xl font-bold text-purple-600 mb-2">
+                      {data.summary.total_responses >= 10 ? '1 semana' : '3 días'}
+                    </div>
+                    <p className="text-sm text-gray-600">Recomendado</p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      {data.summary.total_responses >= 10 ?
+                        'Datos suficientes para análisis semanal' :
+                        'Recopilar más respuestas primero'}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-gray-200 bg-white">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-gray-900">Estado del Sistema</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-2">
+                      {data.systemHealth.health_status}
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Puntuación: {data.systemHealth.overall_health_score.toFixed(1)}/10
+                    </p>
+                    <div className="mt-3">
+                      <Badge variant={data.systemHealth.overall_health_score >= 7 ? 'default' : 'secondary'}>
+                        {data.systemHealth.overall_health_score >= 7 ? 'Funcionando bien' : 'Necesita atención'}
+                      </Badge>
                     </div>
                   </CardContent>
                 </Card>
