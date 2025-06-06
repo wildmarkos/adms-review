@@ -14,7 +14,7 @@ A professional Next.js-based admissions feedback system designed to identify and
 ### Technical Highlights
 - **Modern Tech Stack**: Next.js 14+ with App Router, TypeScript, Tailwind CSS
 - **Professional UI**: Shadcn/ui components for clean, modern design
-- **Local Database**: SQLite with better-sqlite3 for data sovereignty
+- **Flexible Database**: SQLite (local) or Supabase (remote PostgreSQL) support
 - **State Management**: Zustand for efficient survey progress tracking
 - **Data Visualization**: Recharts for comprehensive analytics charts
 - **Responsive Design**: Mobile-friendly interface for all screen sizes
@@ -22,7 +22,7 @@ A professional Next.js-based admissions feedback system designed to identify and
 ## 🛠 Tech Stack
 
 - **Frontend**: Next.js 14+, TypeScript, Tailwind CSS, Shadcn/ui
-- **Database**: SQLite with better-sqlite3 driver
+- **Database**: SQLite (local) or Supabase PostgreSQL (remote)
 - **Forms**: React Hook Form with custom validation
 - **State Management**: Zustand with persistence
 - **Charts**: Recharts + D3.js for visualizations
@@ -48,10 +48,27 @@ A professional Next.js-based admissions feedback system designed to identify and
    npm install
    ```
 
-3. **Initialize the database:**
+3. **Choose your database setup:**
+
+   **Option A: Local SQLite (Default)**
    ```bash
    npm run init-db
    ```
+
+   **Option B: Remote Supabase**
+   ```bash
+   # Copy environment template
+   cp .env.example .env.local
+   
+   # Edit .env.local with your Supabase credentials:
+   # DATABASE_TYPE=supabase
+   # NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   # NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   
+   # Test the connection
+   npm run test-db
+   ```
+   📖 **For detailed Supabase setup, see [SUPABASE_SETUP.md](SUPABASE_SETUP.md)**
 
 4. **Start the development server:**
    ```bash
@@ -170,12 +187,50 @@ adms-feedback-system/
 - Performance vs. benchmark comparisons
 - Export capabilities for further analysis
 
+## 💾 Database Options
+
+### Flexible Storage Solutions
+Switch between local and remote database with a single environment variable:
+
+```bash
+# Local SQLite (default)
+DATABASE_TYPE=sqlite
+
+# Remote Supabase PostgreSQL
+DATABASE_TYPE=supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Benefits Comparison
+
+| Feature | SQLite (Local) | Supabase (Remote) |
+|---------|----------------|-------------------|
+| **Setup Time** | Instant | 5 minutes |
+| **Data Access** | Local only | Anywhere |
+| **Scalability** | Limited | High |
+| **Collaboration** | Single user | Multi-user |
+| **Backups** | Manual | Automatic |
+| **Real-time** | No | Yes |
+| **Cost** | Free | Free tier + paid |
+
+### Testing Your Database
+```bash
+# Test current database connection
+npm run test-db
+
+# This will verify:
+# - Database connectivity
+# - Basic operations
+# - Data retrieval
+```
+
 ## 🔒 Security & Privacy
 
 ### Data Protection
-- Local SQLite database for data sovereignty
+- Choose between local SQLite or secure cloud PostgreSQL
 - Anonymous response options available
-- No external data transmission required
+- Row Level Security with Supabase
 - Configurable data retention policies
 
 ### Validation & Integrity

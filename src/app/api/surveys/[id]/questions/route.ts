@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dbHelpers } from '@/lib/database';
+import { databaseAdapter } from '@/lib/database-adapter';
 
 export async function GET(
   request: NextRequest,
@@ -17,7 +17,7 @@ export async function GET(
     }
 
     // Get survey details
-    const survey = dbHelpers.getSurvey.get(surveyId);
+    const survey = await databaseAdapter.getSurvey(surveyId);
     if (!survey) {
       return NextResponse.json(
         { error: 'Survey not found' },
@@ -26,7 +26,7 @@ export async function GET(
     }
 
     // Get questions for this survey
-    const questions = dbHelpers.getQuestionsBySurvey.all(surveyId);
+    const questions = await databaseAdapter.getQuestionsBySurvey(surveyId);
 
     // Parse JSON fields with error handling
     const parsedQuestions = questions.map((question: any) => {
