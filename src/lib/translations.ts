@@ -279,80 +279,80 @@ export const spanishTranslations: Translations = {
 
   landing: {
     heroSection: {
-      badge: "Recopilación de Retroalimentación Basada en Evidencia",
-      title: "Transforme Su Proceso de Admisiones",
-      subtitle: "Sistema integral de retroalimentación diseñado para identificar y resolver puntos críticos en su flujo de trabajo del Sistema de Gestión de Relaciones con Clientes Eduscore, potenciando la productividad del equipo y el éxito en las inscripciones.",
+      badge: "Herramienta Interna de Retroalimentación",
+      title: "Sistema de Retroalimentación",
+      subtitle: "Herramienta interna para recopilar retroalimentación sobre procesos y flujos de trabajo, identificando áreas de mejora para optimizar la eficiencia del equipo.",
       startSurvey: "Iniciar Encuesta",
       viewInsights: "Ver Perspectivas"
     },
     features: {
       roleSpecific: {
-        title: "Encuestas Específicas por Función",
-        description: "Cuestionarios personalizados para gerentes y representantes de ventas, capturando perspectivas estratégicas y tácticas.",
+        title: "Encuestas por Función",
+        description: "Cuestionarios específicos para diferentes roles organizacionales, recopilando retroalimentación relevante a cada función.",
         managerSurvey: "Encuesta Gerencial:",
         salesSurvey: "Encuesta de Ventas:",
         questions: "preguntas"
       },
       evidenceBased: {
-        title: "Análisis Basado en Evidencia",
-        description: "Metodologías comprobadas incluyendo el Modelo Kirkpatrick, NPS y Análisis de Causa Raíz para obtener perspectivas accionables.",
-        painPointPrioritization: "Priorización de Puntos Críticos",
-        workflowMapping: "Mapeo de Flujos de Trabajo",
+        title: "Análisis Estructurado",
+        description: "Recopilación sistemática de datos para identificar patrones y áreas de mejora en los procesos de trabajo.",
+        painPointPrioritization: "Identificación de Problemas",
+        workflowMapping: "Análisis de Procesos",
         impactAssessment: "Evaluación de Impacto"
       },
       actionableInsights: {
-        title: "Perspectivas Accionables",
-        description: "Panel de control analítico integral con recomendaciones priorizadas y proyecciones de retorno de inversión.",
-        quickWins: "Victorias Rápidas (0-30 días)",
+        title: "Resultados y Recomendaciones",
+        description: "Análisis de retroalimentación con sugerencias categorizadas por horizonte temporal de implementación.",
+        quickWins: "Corto Plazo (0-30 días)",
         mediumTerm: "Mediano Plazo (1-3 meses)",
-        strategic: "Estratégico (3-12 meses)"
+        strategic: "Largo Plazo (3-12 meses)"
       }
     },
     challenges: {
-      title: "Desafíos Actuales que Abordamos",
-      subtitle: "Puntos críticos clave identificados en los flujos de trabajo de equipos de admisiones",
-      criticalIssues: "Problemas Críticos",
-      expectedOutcomes: "Resultados Esperados",
+      title: "Áreas de Evaluación",
+      subtitle: "Aspectos principales que se evalúan en los procesos de trabajo actuales",
+      criticalIssues: "Problemas Identificados",
+      expectedOutcomes: "Objetivos de Mejora",
       issues: [
-        "Ineficiencias en el seguimiento y rastreo de prospectos",
-        "Cargas de entrada de datos que reducen el tiempo de venta",
-        "Mala calidad de prospectos y tasas de conversión",
-        "Brechas de comunicación entre gerentes y ventas",
-        "Equipos recurriendo a soluciones temporales en Excel"
+        "Eficiencia en el seguimiento y gestión de procesos",
+        "Optimización del tiempo dedicado a tareas administrativas",
+        "Calidad de los procesos y resultados obtenidos",
+        "Comunicación entre diferentes niveles organizacionales",
+        "Uso de herramientas y sistemas de trabajo"
       ],
       outcomes: [
-        "Identificar áreas específicas de mejora en Eduscore",
-        "Reducir la dependencia en soluciones manuales temporales",
-        "Mejorar las tasas de conversión de prospectos",
-        "Aumentar la productividad y satisfacción del equipo",
-        "Crear planes de acción basados en datos"
+        "Identificar oportunidades de mejora específicas",
+        "Optimizar el uso de herramientas y recursos",
+        "Mejorar la eficiencia de los procesos",
+        "Aumentar la satisfacción y productividad del equipo",
+        "Desarrollar planes de mejora basados en datos"
       ]
     },
     surveyOverview: {
-      title: "Resumen de la Encuesta",
-      subtitle: "Recopilación integral de retroalimentación diseñada para su equipo de admisiones",
+      title: "Información de las Encuestas",
+      subtitle: "Cuestionarios diseñados para recopilar retroalimentación de diferentes roles en la organización",
       managerSurvey: {
         title: "Encuesta Gerencial",
-        subtitle: "Retroalimentación a nivel estratégico",
+        subtitle: "Perspectiva de gestión",
         duration: "~15 minutos",
-        questions: "18 estratégicas",
-        focusAreas: "Proceso y ROI",
-        description: "Cubre alineación estratégica, gestión del rendimiento del equipo, eficiencia de procesos y asignación de recursos."
+        questions: "18 preguntas",
+        focusAreas: "Proceso y gestión",
+        description: "Enfocada en alineación estratégica, gestión del equipo, eficiencia de procesos y asignación de recursos."
       },
       salesSurvey: {
         title: "Encuesta del Equipo de Ventas",
-        subtitle: "Retroalimentación a nivel táctico",
+        subtitle: "Perspectiva operativa",
         duration: "~12 minutos",
-        questions: "21 tácticas",
-        focusAreas: "Flujo de trabajo diario",
-        description: "Cubre eficiencia del flujo de trabajo diario, gestión de prospectos, comunicación y efectividad de ventas."
+        questions: "21 preguntas",
+        focusAreas: "Trabajo diario",
+        description: "Enfocada en eficiencia del trabajo diario, gestión de tareas, comunicación y efectividad operativa."
       }
     },
     cta: {
-      title: "¿Listo para Transformar Su Proceso?",
-      subtitle: "Únase a los equipos que ya están mejorando su éxito en inscripciones con perspectivas basadas en datos",
+      title: "Proporcione Su Retroalimentación",
+      subtitle: "Ayude a mejorar nuestros procesos internos compartiendo su experiencia y perspectivas",
       startSurvey: "Iniciar Su Encuesta",
-      exploreSample: "Explorar Perspectivas de Muestra"
+      exploreSample: "Ver Datos de Ejemplo"
     }
   },
 
